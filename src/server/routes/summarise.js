@@ -1,4 +1,4 @@
-import { summarise } from '../../../qvac/skills/summarise.js'
+import { summarise } from '../../qvac/skills/summarise.js'
 import { x402Gate } from '../middleware/x402.js'
 import { recordEarning } from '../../shared/store.js'
 import { CONFIG } from '../../shared/config.js'

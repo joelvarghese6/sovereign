@@ -1,4 +1,4 @@
-import { transcribe } from '../../../qvac/skills/transcribe.js'
+import { transcribe } from '../../qvac/skills/transcribe.js'
 import { x402Gate } from '../middleware/x402.js'
 import { recordEarning } from '../../shared/store.js'
 import { CONFIG } from '../../shared/config.js'

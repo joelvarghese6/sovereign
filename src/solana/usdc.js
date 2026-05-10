@@ -16,13 +16,14 @@ import { connection } from './wallet.js'
 export const USDC_MINT = new PublicKey(
     '4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU',
 )
+export const USDC_DECIMALS = 6
 
 export async function getUSDCBalance(publicKey) {
     const pk = new PublicKey(publicKey)
     const ata = await getAssociatedTokenAddress(USDC_MINT, pk)
     try {
         const acc = await getAccount(connection, ata)
-        return Number(acc.amount) / 1_000_000   // USDC has 6 decimals
+        return Number(acc.amount) / 10 ** USDC_DECIMALS
     } catch {
         return 0
     }
@@ -48,7 +49,7 @@ export async function transferUSDC(fromKeypair, toAddress, usdcAmount) {
 
     tx.add(createTransferInstruction(
         fromATA, toATA, fromKeypair.publicKey,
-        BigInt(Math.round(usdcAmount * 1_000_000)),
+        BigInt(Math.round(usdcAmount * 10 ** USDC_DECIMALS)),
     ))
 
     return sendAndConfirmTransaction(connection, tx, [fromKeypair])

@@ -23,6 +23,7 @@ export async function announceToSwarm(serverWallet, port) {
     swarm.join(topic, { server: true, client: false })
 
     swarm.on('connection', (socket) => {
+        socket.on('error', (err) => logger.debug({ err: err.message }, 'Swarm socket error'))
         logger.info('Peer connected — sending manifest')
         socket.write(b4a.from(manifest))
         socket.end()

@@ -35,18 +35,40 @@ fastify.get('/health', async () => ({
 
 // Boot sequence
 await initEngine()
-await fastify.listen({ port: CONFIG.server.port, host: CONFIG.server.host })
+try {
+    await fastify.listen({ port: CONFIG.server.port, host: CONFIG.server.host })
+} catch (err) {
+    if (err.code === 'EADDRINUSE') {
+        logger.error(`Port ${CONFIG.server.port} is already in use. Kill the old process or change SERVER_PORT in .env`)
+        await shutdown()
+        process.exit(1)
+    }
+    throw err
+}
 logger.info(`Sovereign skill server on :${CONFIG.server.port}`)
 
 await announceToSwarm(fastify.serverWallet, CONFIG.server.port)
 
 // Graceful shutdown
-for (const sig of ['SIGINT', 'SIGTERM']) {
-    process.on(sig, async () => {
-        logger.info('Shutting down...')
+let shuttingDown = false
+async function gracefulShutdown() {
+    if (shuttingDown) return
+    shuttingDown = true
+    logger.info('Shutting down...')
+
+    // Force exit after 5s if cleanup hangs (e.g. QVAC bare worker)
+    const forceTimer = setTimeout(() => process.exit(0), 5000)
+    forceTimer.unref()
+
+    try {
         await destroySwarm()
         await shutdown()
         await fastify.close()
-        process.exit(0)
-    })
+    } catch (err) {
+        logger.error({ err }, 'Error during shutdown')
+    }
+    process.exit(0)
 }
+
+process.on('SIGINT', gracefulShutdown)
+process.on('SIGTERM', gracefulShutdown)

@@ -4,7 +4,7 @@ export function buildManifest(port, walletAddress, prices) {
     return JSON.stringify({
         version: 1,
         name: 'Sovereign Node',
-        endpoint: `http://0.0.0.0:${port}`,
+        endpoint: `http://localhost:${port}`,
         wallet: walletAddress,
         skills: [
             { name: 'translate', path: '/translate', priceUSDC: prices.translate },

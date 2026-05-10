@@ -11,19 +11,18 @@
     "dev:server": "node --env-file=.env --watch src/server/index.js"
   },
   "dependencies": {
-    "@qvac/sdk": "latest",
-    "@solana/web3.js": "^1.98.0",
-    "@solana/spl-token": "^0.4.9",
     "@coinbase/x402": "latest",
-    "fastify": "^4.28.0",
     "@fastify/cors": "^9.0.1",
-    "hyperswarm": "^4.7.0",
+    "@qvac/sdk": "latest",
+    "@solana/spl-token": "^0.4.9",
+    "@solana/web3.js": "^1.98.0",
     "b4a": "^1.6.7",
-    "bs58": "^6.0.0",
     "blessed": "^0.1.81",
     "blessed-contrib": "^4.11.0",
+    "bs58": "^6.0.0",
+    "fastify": "^4.28.0",
+    "hyperswarm": "^4.7.0",
     "pino": "^9.3.2",
-    "pino-pretty": "^11.2.1",
-    "dotenv": "^16.4.5"
+    "pino-pretty": "^11.2.1"
   }
 }

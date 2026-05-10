@@ -3,7 +3,7 @@ import { logger } from '../shared/logger.js'
 import { loadWallet } from '../solana/keystore.js'
 import { getSOLBalance } from '../solana/wallet.js'
 import { getUSDCBalance } from '../solana/usdc.js'
-import { discoverPeers } from '../p2p/swarm.js'
+import { findSovereignPeers } from './discovery.js'
 import { createBuyer } from './buyer.js'
 
 const agentKP = loadWallet(CONFIG.keystore.agentPath, CONFIG.keystore.passphrase)
@@ -14,21 +14,7 @@ const usdc = await getUSDCBalance(agentKP.publicKey.toBase58())
 logger.info(`Balance: ${sol} SOL | ${usdc} USDC`)
 
 // Discover peers via Hyperswarm
-logger.info('Discovering peers via Hyperswarm...')
-const peers = await discoverPeers(15_000)
-
-if (peers.length === 0) {
-    logger.warn('No peers found — falling back to localhost')
-    peers.push({
-        endpoint: `http://localhost:${CONFIG.server.port}`,
-        skills: [
-            { name: 'translate', path: '/translate' },
-            { name: 'summarise', path: '/summarise' },
-        ],
-    })
-}
-
-logger.info(`Found ${peers.length} peer(s)`)
+const peers = await findSovereignPeers()
 
 const buyer = createBuyer(agentKP)
 const peer = peers[0]

@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto'
 import b4a from 'b4a'
 import { CONFIG } from '../shared/config.js'
 import { logger } from '../shared/logger.js'
+import { buildManifest } from '../p2p/manifest.js'
 
 let swarm = null
 
@@ -13,18 +14,11 @@ export async function announceToSwarm(serverWallet, port) {
         .update(CONFIG.p2p.topic)
         .digest()
 
-    const manifest = JSON.stringify({
-        version: 1,
-        name: 'Sovereign Node',
-        endpoint: `http://0.0.0.0:${port}`,
-        wallet: serverWallet.publicKey.toBase58(),
-        skills: [
-            { name: 'translate', path: '/translate', priceUSDC: CONFIG.x402.prices.translate },
-            { name: 'summarise', path: '/summarise', priceUSDC: CONFIG.x402.prices.summarise },
-            { name: 'transcribe', path: '/transcribe', priceUSDC: CONFIG.x402.prices.transcribe },
-        ],
-        ts: Date.now(),
-    })
+    const manifest = buildManifest(
+        port,
+        serverWallet.publicKey.toBase58(),
+        CONFIG.x402.prices,
+    )
 
     swarm.join(topic, { server: true, client: false })
 

@@ -35,9 +35,13 @@ logger.info(`Agent wallet:  ${agentKP.publicKey.toBase58()}`)
 
 if (CONFIG.solana.network === 'devnet') {
     logger.info('Airdropping SOL on devnet...')
-    await airdrop(serverKP.publicKey.toBase58(), 2)
-    await airdrop(agentKP.publicKey.toBase58(), 2)
-    logger.info('Airdrop done')
+    try {
+        await airdrop(serverKP.publicKey.toBase58(), 2)
+        await airdrop(agentKP.publicKey.toBase58(), 2)
+        logger.info('Airdrop done')
+    } catch (e) {
+        logger.warn({ err: e.message }, 'Airdrop failed. Please fund wallets manually.')
+    }
 }
 
 const serverSOL = await getSOLBalance(serverKP.publicKey.toBase58())

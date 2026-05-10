@@ -14,10 +14,10 @@ const fastify = Fastify({ logger: false })
 await fastify.register(cors)
 
 // Load server wallet — attach to fastify instance so routes can access it
-fastify.serverWallet = loadWallet(
+fastify.decorate('serverWallet', loadWallet(
     CONFIG.keystore.serverPath,
     CONFIG.keystore.passphrase,
-)
+))
 
 logger.info(`Server wallet: ${fastify.serverWallet.publicKey.toBase58()}`)
 

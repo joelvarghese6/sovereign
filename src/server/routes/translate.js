@@ -1,4 +1,4 @@
-import { translate } from '../../qvac/skills/translate.js'
+import { translate } from '../../../qvac/skills/translate.js'
 import { x402Gate } from '../middleware/x402.js'
 import { recordEarning } from '../../shared/store.js'
 import { CONFIG } from '../../shared/config.js'

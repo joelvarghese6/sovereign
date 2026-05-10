@@ -10,7 +10,7 @@ export function createBuyer(agentKeypair) {
             network: CONFIG.solana.network === 'mainnet' ? 'solana' : 'solana-devnet',
             publicKey: agentKeypair.publicKey,
             updateTransaction: async (tx) => {
-                tx.sign([agentKeypair])
+                tx.sign(agentKeypair)
                 return tx
             },
         },
